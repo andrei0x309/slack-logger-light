@@ -24,7 +24,8 @@
   "exports": {
     ".": {
       "import": "./dist/farcaster-hub-utils.es.js",
-      "require": "./dist/farcaster-hub-utils.umd.js"
+      "require": "./dist/farcaster-hub-utils.umd.js",
+      "types": "./dist/index.d.ts"
     }
   },
   "scripts": {
@@ -36,6 +37,7 @@
     "build": "vite build"
   },
   "devDependencies": {
+    "@rollup/plugin-typescript": "^11.1.6",
     "@types/node": "^20.14.10",
     "@typescript-eslint/parser": "^7.15.0",
     "eslint": "^9.6.0",
