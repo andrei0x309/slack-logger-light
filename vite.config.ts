@@ -1,6 +1,8 @@
 import path from 'node:path'
 import { defineConfig } from 'vite'
 import typescript from '@rollup/plugin-typescript'
+import { nodePolyfills } from 'vite-plugin-node-polyfills'
+
 
 declare const __dirname: string;
 
@@ -13,6 +15,7 @@ export default defineConfig({
 		},
 	},
 	plugins: [
+		nodePolyfills(),
 		typescript({'target': 'es2020',
 			'rootDir': resolvePath('src'),
 			'declaration': true,
@@ -22,11 +25,17 @@ export default defineConfig({
 			sourceMap: false,
 }),
 	],
+	esbuild: {
+		platform: 'node',
+		target: 'node20'
+	},
 	build: {
+		target: 'node20',
 		lib: {
 			entry: resolvePath('src/main.ts'),
 			name: 'FCHubUtils',
 			fileName: (format) => `farcaster-hub-utils.${format}.js`,
+			formats: ['es', 'umd'],
 		},
 	},
 })
