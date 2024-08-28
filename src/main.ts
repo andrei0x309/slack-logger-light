@@ -1,7 +1,8 @@
 import { 
-	makeUserNameProofClaim, 
-	EthersEip712Signer, 
-	Eip712Signer,
+	// makeUserNameProofClaim, 
+	// EthersEip712Signer, 
+	// Eip712Signer,
+	makeCastRemove,
 	NobleEd25519Signer,
 	FarcasterNetwork,
 	makeCastAdd,
@@ -24,6 +25,14 @@ class FCHubUtils {
 
 	constructor(PK: string, fid: number,  HUB_URL?: string, HUB_USER?: string, HUB_PASS?: string) {
 		if (HUB_URL) {
+			if(HUB_URL.includes('//')) {
+				HUB_URL = HUB_URL.split('//')[1];
+			}
+
+			if(HUB_URL.includes('/')) {
+				HUB_URL = HUB_URL.split('/')[0];
+			}
+
 			this.HUB_URL = HUB_URL;
 		}
 		if (HUB_USER) {
@@ -157,6 +166,37 @@ class FCHubUtils {
 	  
 		return hash
 	  }
+
+	  deleteCast = async (hash: string) => {
+		try {
+		 const deleteCastMessage = await makeCastRemove({
+			targetHash: Buffer.from(hash, 'hex'),
+		 }, {
+			fid: this.fid,
+			network: FarcasterNetwork.MAINNET
+		 }, this.signer)
+
+		 if (!deleteCastMessage.isOk()) {
+			const hubError = deleteCastMessage._unsafeUnwrapErr().toString()
+			console.error(`Failed to delete cast due to network error hash=${hash} fid=${this.fid} err=${hubError}`)
+			return false
+		 }
+
+		 const deleteCastResponse = await this.hubClient.submitMessage(deleteCastMessage._unsafeUnwrap(), this.hubClientAuthMetadata)
+		 
+		 if (!deleteCastResponse.isOk()) {
+			const hubError = deleteCastResponse._unsafeUnwrapErr().toString()
+			console.error(`Failed to delete cast due to network error hash=${hash} fid=${this.fid} err=${hubError}`)
+			return false
+		 }
+
+		 return true
+
+		 } catch (e) {
+				console.error(`Failed to delete cast due to network error hash=${hash} fid=${this.fid} err=${e}`)
+				return false
+		 }
+		}
 
 }
 
