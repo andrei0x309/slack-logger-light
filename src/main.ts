@@ -9,7 +9,8 @@ import {
 	CastAddBody,
 	CastType,
 	getSSLHubRpcClient,
-	getAuthMetadata
+	getAuthMetadata,
+	Message
   } from '@farcaster/hub-nodejs';
 
 
@@ -46,6 +47,43 @@ class FCHubUtils {
 		this.signer = new NobleEd25519Signer(Buffer.from(this.PK.replace('0x', ''), 'hex'));
 		this.hubClient = getSSLHubRpcClient(this.HUB_URL);
 		this.hubClientAuthMetadata = getAuthMetadata(this.HUB_USER, this.HUB_PASS);
+	}
+
+	getFidFromUsername = async (username: string) => {
+		try {
+		const user = await this.hubClient.getUsernameProof({
+			name: new TextEncoder().encode(username),
+		})
+		if (!user.isOk()) {
+			throw new Error(user._unsafeUnwrapErr().toString())
+		}
+		return user._unsafeUnwrap().fid
+		} catch (e) {
+			console.error(`Failed to get fid from username=${username} err=${e}`)
+			return null
+		}
+	}
+
+	getCastFromHash = async (hash: string, fid: number) => {
+		try {
+			const cast = await this.hubClient.getCast({
+				hash: Buffer.from(hash, 'hex'),
+				fid: fid
+			})
+			if (!cast.isOk()) {
+				throw new Error(cast._unsafeUnwrapErr().toString())
+			}
+			 
+			const castData = cast._unsafeUnwrap()
+
+			if(castData.data?.castAddBody) {
+				return castData.data.castAddBody as CastAddBody;
+			}
+			return null
+		} catch (e) {
+			console.error(`Failed to get cast from hash=${hash} err=${e}`)
+			return null
+		}
 	}
 
 
@@ -91,7 +129,7 @@ class FCHubUtils {
 		})
 	  }
 	  
-	  parseFarcasterMentions (text: string) {
+	  async parseFarcasterMentions (text: string) {
 		const reResults = [...text.matchAll(/@\w+(.eth)?/g)]
 		const mentions: number[] = []
 		const mentionsPositions: number[] = []
@@ -100,7 +138,11 @@ class FCHubUtils {
 		for (const reResult of reResults) {
 		  const mention = reResult[0].slice(1)
 		  const position = this.byteLength(text.slice(0, (reResult.index)))
-		  mentions.push(mention.length)
+		  const fid = await this.getFidFromUsername(mention)
+		  if (fid === null) {
+			continue
+		  }
+		  mentions.push(fid)
 		  mentionsPositions.push(position - offset)
 		  mentionsText = mentionsText.replace(`@${mention}`, '')
 		  offset += this.byteLength(`@${mention}`)

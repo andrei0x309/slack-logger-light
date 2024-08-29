@@ -21,6 +21,10 @@ fcHubUtils.createFarcasterPost({
 
 ```
 
+### Changelog
+
+[Changelog](./CHANGELOG.md)
+
 ### Notes
 
 - The `PK` is the private key of the signer.

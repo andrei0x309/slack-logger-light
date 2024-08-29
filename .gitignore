@@ -5,3 +5,4 @@ dist-ssr
 *.local
 components.d.ts
 yarn-error.log
+.env
