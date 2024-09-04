@@ -42,6 +42,6 @@
     "yarn-upgrade-all": "^0.7.2"
   },
   "dependencies": {
-    "@farcaster/hub-nodejs": "^0.11.19"
+    "@farcaster/hub-nodejs": "^0.12.2"
   }
 }
