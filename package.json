@@ -1,0 +1,41 @@
+{
+  "name": "slack-logger-light",
+  "version": "0.1.1",
+  "description": "Zero dependency logger for slack, super light, great for service workers",
+  "repository": "https://github.com/andrei0x309/slack-logger-light",
+  "author": "Andrei O",
+  "license": "MIT",
+  "private": false,
+  "keywords": [
+    "slack",
+    "logger",
+    "slack-logger",
+    "slack-logger-light"
+  ],
+  "files": [
+    "dist"
+  ],
+  "type": "module",
+  "types": "./dist/index.d.ts",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "scripts": {
+    "lint": "eslint --ext .vue --ignore-path .gitignore --fix src",
+    "preversion": "yarn build",
+    "release": "yarn preversion && yarn config set version-tag-prefix slack-logger-light@v &&  yarn config set version-git-message slack-logger-light@v%s' && yarn version --patch",
+    "postversion": "git push && git push --tags && npm publish",
+    "build": "tsc"
+  },
+  "devDependencies": {
+    "@types/bun": "^1.1.8",
+    "@types/node": "^20.14.10",
+    "eslint": "^9.6.0",
+    "typescript": "^5.5.3"
+  }
+}

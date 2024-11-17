@@ -1,0 +1,1 @@
+export { SlackLogger } from './main'
