@@ -1,6 +1,6 @@
 {
   "name": "slack-logger-light",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Zero dependency logger for slack, super light, great for service workers",
   "repository": "https://github.com/andrei0x309/slack-logger-light",
   "author": "Andrei O",
