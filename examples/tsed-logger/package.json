@@ -1,0 +1,43 @@
+{
+    "name": "slack-logger-light-tsed-example",
+    "version": "0.0.0",
+    "description": "Example integration with tsed logger.",
+    "repository": "https://github.com/andrei0x309/slack-logger-light",
+    "author": "Andrei O",
+    "license": "MIT",
+    "private": false,
+    "keywords": [
+        "slack",
+        "logger",
+        "slack-logger",
+        "slack-logger-light"
+    ],
+    "files": [
+        "dist"
+    ],
+    "type": "module",
+    "types": "./dist/index.d.ts",
+    "main": "./dist/index.js",
+    "module": "./dist/index.js",
+    "exports": {
+        ".": {
+            "import": "./dist/index.js",
+            "types": "./dist/index.d.ts"
+        }
+    },
+    "scripts": {
+        "lint": "eslint --ext .vue --ignore-path .gitignore --fix src",
+        "build": "tsc"
+    },
+    "devDependencies": {
+        "@types/bun": "^1.1.8",
+        "@types/node": "^20.14.10",
+        "eslint": "^9.6.0",
+        "typescript": "^5.5.3"
+    },
+    "dependencies": {
+        "@tsed/logger": "^6.7.8",
+        "@tsed/logger-file": "^6.7.8",
+        "slack-logger-light": "^0.1.2"
+    }
+}
